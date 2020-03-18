@@ -25,7 +25,7 @@ export default {
   ** Global CSS
   */
   css: [
-    '@pages/Create-recipe.css'
+    // '@pages/Create-recipe.css'
   ],
   /*
   ** Plugins to load before mounting the App

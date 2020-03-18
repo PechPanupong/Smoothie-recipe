@@ -1,0 +1,13 @@
+.container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
+    /* text-align: center; */
+  }
+  #toCreatRow{
+    margin-top: 5em;;
+  }
+  #head{
+    font-size: 5em;;
+  }

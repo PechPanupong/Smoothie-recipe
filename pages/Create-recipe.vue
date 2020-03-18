@@ -17,7 +17,7 @@
         </div>
         </div>
 
-        <div  v-for="(inItem,index) in ingredientArr" v-bind:key="inItem.id" >
+        <div class="ingre-box"  v-for="(inItem,index) in ingredientArr" v-bind:key="inItem.id" >
          <div class="row" id="ingre-box">
              <div class="col">
               <div class="row">
@@ -25,68 +25,34 @@
             </div>
             <div class="row">
             <!-- <input id="ingredient" v-model="inItem.ingredient" type="text" placeholder="Add your Ingredient"> -->
-            <input :id="index" v-model="inItem.ingredient" type="text" placeholder="Add your Ingredient">
+            <input  class="inputval" :id="index" v-model="inItem.ingredient" type="text" placeholder="Add your Ingredient">
             </div>
-            <button @click="deleteIngredient(index)">Delete</button>
+            
+            <!-- <button id="delete-btn" @click="deleteIngredient(index)">Delete</button> -->
             </div>
         </div>
+        <div class="row">
+            <button id="delete-btn" @click="deleteIngredient(index)">Delete</button>
+              
+            </div>
         </div>
 
 
 
 
         <div class="row" id="btn-row">
-            <div class="col" id="add-in-col">
+            <div class="col" id="btn-col">
             <button @click="addIngredient" id="add-ingr">Add more ingredient</button>
             </div>
-              <div class="col" id="save-col">
+              <div class="col" id="btn-col">
             <button id="save" @click="saveRecipe">Save this recipe</button>
             </div>
-              <div class="col" id="cancel-col">
-            <button @click="checkValue" id="cancel">cancel</button>
+              <div class="col" id="btn-col">
+             <nuxt-link to="/"><button id="cancel">cancel</button></nuxt-link>
             </div>
         </div>
 
     </div>
-<!-- <div>
-   <v-dialog style="display: inline-table;" max-width="50em" v-model="open">
-    <v-card class="p-5">
-      <v-card-title>Add Books</v-card-title>
-      <v-form>
-        <v-text-field v-model="title" label="Enter Book Title"></v-text-field>
-        <div  v-for="(inItem,index) in ingredientArr" v-bind:key="inItem.id" >
-         <div style="padding-left: 2em;display: inline-table" class="row" id="ingre-box">
-             <div class="col">
-              <div class="row">
-                <label>Add Ingredient {{index}}</label>
-            </div>
-            <div class="row">
-            <input id="ingredient" v-model="inItem.ingredient" type="text" placeholder="Add your Ingredient">
-            </div>
-            <button @click="deleteIngredient(index)">Delete</button>
-            </div>
-        </div>
-        </div>
-      </v-form>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-         <div class="row" id="btn-row">
-            <div class="col" id="add-in-col">
-            <button @click="addIngredient" id="add-ingr">Add more ingredient</button>
-            </div>
-              <div class="col" id="save-col">
-            <button id="save" @click="saveRecipe">Save this recipe</button>
-            </div>
-              <div class="col" id="cancel-col">
-            <button @click="checkIsEmpty" id="cancel">cancel</button>
-            </div>
-        </div>
-
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-
-</div> -->
 </div>
 
 
@@ -119,7 +85,7 @@ export default {
         }
     },
     mounted(){
-        eventBus.$on("open-add", this.open = true);
+        // eventBus.$on("open-add", this.open = true);
         //do when page loaded
         console.log('Init Page');
         fireDb.collection('Smoothie-Recipe').get().then((dat)=>{
@@ -166,12 +132,9 @@ export default {
             const document = {
             NameSmoothie: this.title,
             Ingredient: this.ingredientArr,
-            
             }
-            
           try {
             await ref.set(document)
-           
           } catch (e) {
             console.error(e)
           }
@@ -191,24 +154,75 @@ export default {
         deleteIngredient(index){
             this.ingredientArr.splice(index,1)
         },
-        checkValue(){
-          for (let index = 0; index < this.ingredientArr.length; index++) {
-            var topic
-            var arr
-            
-            // this.arr = this.ingredientArr[index]
-            // console.log(this.arr)
-
-             this.ingredientArr.push({
-              ingreID:this.ingreID++,
-              ingredient:''
-            })
-            // console.log(this.ingredientArr[index].ingredient)
-            
-          }
-        }
+      
         
     }
    
 }
 </script>
+
+<style>
+.container {
+    display: flex;
+    justify-content: center;
+}
+.inputval{
+  width: 100%;
+    padding-top: 1em;
+    padding-bottom: 1em;
+        height: 2em;
+}
+.ingre-box{
+  padding-bottom: 1em;
+}
+#head-title{
+    height: 5em;
+    align-items: center;
+    font-size: 2em;
+}
+#title-box{
+    height: 5em;
+    display: flex;
+
+}
+#ingre-box{
+    height: 5em;
+    display: flex;
+}
+#delete-btn{
+    background: red;
+    width: 5em;
+    border-radius: 5em;
+    /* margin-top: 1em; */
+}
+#btn-row{
+  padding-top: 5em;
+}
+#btn-col{
+  display: flex;
+    justify-content: center;
+}
+#add-ingr{
+background: white;
+color: black;
+    width: 13em;
+    border-radius: 5em;
+    height:2em
+}
+#save{
+background: rgb(19, 171, 177);
+color: rgb(255, 251, 251);
+    width: 13em;
+    border-radius: 5em;
+    height:2em
+}
+#cancel{
+background: rgb(197, 15, 15);
+color: rgb(255, 251, 251);
+    width: 13em;
+    border-radius: 5em;
+    height:2em
+}
+
+
+</style>
