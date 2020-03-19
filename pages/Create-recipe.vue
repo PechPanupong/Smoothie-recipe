@@ -21,7 +21,7 @@
          <div class="row" id="ingre-box">
              <div class="col">
               <div class="row">
-                <label>Add Ingredient {{index}}</label>
+                <label>Add Ingredient </label>
             </div>
             <div class="row">
             <!-- <input id="ingredient" v-model="inItem.ingredient" type="text" placeholder="Add your Ingredient"> -->
@@ -61,7 +61,8 @@
 </template>
 <script>
  import {fireDb} from '~/plugins/firebase.js'
- import { eventBus } from "@/eventBus";
+import { eventBus } from '../eventBus';
+ 
 
 export default {
   component(){
@@ -72,21 +73,25 @@ export default {
           open:false,
             title:'',
             ingredient:'',
-
-          ingreID:1,
             ingreObj:{},
             ingredientArr:[{
-              ingreID:0,
               ingredient:''
             }],
 
             NameShow:'',
-            IngreShow:''
+            IngreShow:'',
+            test:''
         }
     },
+    created(){
+      console.log('test create()')
+      eventBus.$on('open-create', (testEventbus) => {  
+        this.test = testEventbus 
+            console.log('Receive event.', this.test);
+        });
+    },
+  
     mounted(){
-        // eventBus.$on("open-add", this.open = true);
-        //do when page loaded
         console.log('Init Page');
         fireDb.collection('Smoothie-Recipe').get().then((dat)=>{
             dat.forEach(element => {
@@ -95,22 +100,10 @@ export default {
                 
             });
         })
-        // console.log(this.recipeArr)
-        // console.log(this.ingredientArr);
-        
-        //  const ref = fireDb.collection(NameCollec).doc(namedoc)
-        // let snap
-        // try {
-        //   snap = await ref.get()
-        // } catch (e) {
-        //   // TODO: error handling
-        //   console.error(e)
-        // }
     
     },
     methods:{
            checkIsEmpty(){
-             var filtered
              console.log(this.ingredientArr.length);
             for(let index=0;index< this.ingredientArr.length;index++){
               if(this.ingredientArr[index].ingredient == "" ){
@@ -146,7 +139,7 @@ export default {
             console.log('Test function at Init page')
             // this.ingreObj
             this.ingredientArr.push({
-              ingreID:this.ingreID++,
+              // ingreID:this.ingreID++,
               ingredient:''
             })
 
