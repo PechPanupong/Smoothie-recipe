@@ -11,13 +11,23 @@
 
    <div>
     <div class="row" >
-      <div class="col-4" v-for="names in allRecipe" v-bind:key="names.id">
+      <div class="col-4" v-for="item in allData" v-bind:key="item.id">
          <v-card class="mx-auto" max-width="400">
             <v-img src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg" height="200px"></v-img>
-            <v-card-title>{{names}}</v-card-title>
-            <div>
-              <v-card-text>{{recipeIngredient}}</v-card-text>
+            <v-card-title>{{item.NameSmoothie}}</v-card-title>
+            <div class="row">
+             <div class="col col-pad" >
+                <span v-for="ingr in item.Ingredient" v-bind:key="ingr">
+          
+              <span class="ingr" >{{ingr.ingredient}}</span>
+             </span>
              </div>
+            </div>
+             <!-- <div v-for="ingr in item.Ingredient" v-bind:key="ingr">
+              <v-card-text>{{ingr.ingredient}}</v-card-text>
+             </div> -->
+            
+             <button class="edit-btn">Edit</button>
             <!-- <v-card-actions>
             <v-spacer></v-spacer>
              <slot name="button"></slot>
@@ -26,7 +36,7 @@
       </div>
     </div>
   </div>
-  
+
 </div>   
 
 </template>
@@ -35,73 +45,28 @@
 
 
   export default {
-    components(){
-      
-    },
     data(){
       return{
-        i:0,j:0,
-        allRecipe:[],
-        arrIngre:[],
-        arrIngre2:[],
-        allIngredient:[{
-          
-        }],
+        i:0,j:0,n:0,
+        allData:[],
         recipeIngredient:'',
         recipeTitle:'',
-        tmp:''
+        tmp:'',
+       
       }
     },
     created(){
+      //call data
        fireDb.collection('Smoothie-Recipe').get().then((dat)=>{
             dat.forEach(element => {    
-                
-                this.allRecipe.push(element.data().NameSmoothie)
-                this.recipeTitle = this.allRecipe
-
-                this.tmp = element.data().Ingredient         //keep ingredient into tmp      
-                this.allIngredient.push(this.tmp)
-               
+                this.allData.push(element.data());
             })
-                console.log(this.allIngredient)
-              
-              // get value inside array
-             for(this.i=1;this.i<this.allIngredient.length;this.i++){
-                console.log(this.allIngredient[this.i])
-                this.arrIngre.push(this.allIngredient[this.i])
-
-                for(this.j=0;this.j<this.allIngredient[this.i].length;this.j++){
-                  this.arrIngre2.push(this.allIngredient[this.i][this.j].ingredient)   
-                }
-              
-              }
-              
-                  console.log(this.arrIngre)
-                  console.log(this.arrIngre2)
-
         })
+        console.log(this.allData)
 
-       
-
-          //   fireDb.collection("Smoothie-Recipe").get().then(function(querySnapshot) {
-          //   querySnapshot.forEach(function(doc) {
-          //   console.log(doc.id, " => ", doc.data());
-          //    this.allName.push(doc.id)
-          //   });
-            
-          //     console.log(this.allName)
-
-          // });
-         
-     
-        
     },
     methods: {
-        forFunc(lenght){
-          for(this.i;this.i<=lenght;this.i++){
-            console.log(this.i)
-          }
-        }
+        
   }
     // data() {
     //   return {
@@ -177,9 +142,35 @@
   #head{
     font-size: 5em;;
   }
-    #btnAdd{
+  #btnAdd{
         background: burlywood;
         width: 5em;
         color: black;
     }
+    .edit-btn{
+    width: 4em;
+    height: 2em;
+    background: blueviolet;
+    position: relative;
+    margin-top: -1em;
+    float: right;
+    margin-right: 2em;
+    }
+  .ingr{
+        color:rgb(219, 62, 180);
+    display: inline-block;
+    font-size: 1em;
+    font-weight: 700;
+    line-height: 14px;
+    margin-right: 2px;
+    margin-bottom: 16px;
+    margin-right: 12px;
+    padding: 3px 12px;
+    border: 1px solid rgb(219, 62, 180);
+    border-radius: 10px;
+    white-space: nowrap;
+  }
+  .col-pad{
+    padding-left: 2em;
+  }
 </style>

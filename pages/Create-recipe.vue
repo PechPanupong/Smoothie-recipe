@@ -25,7 +25,7 @@
             </div>
             <div class="row">
             <!-- <input id="ingredient" v-model="inItem.ingredient" type="text" placeholder="Add your Ingredient"> -->
-            <input  class="inputval" :id="index" v-model="inItem.ingredient" type="text" placeholder="Add your Ingredient">
+            <input  class="inputval" :id="'input'+index" v-model="inItem.ingredient" type="text" placeholder="Add your Ingredient">
             </div>
             
             <!-- <button id="delete-btn" @click="deleteIngredient(index)">Delete</button> -->
@@ -144,7 +144,7 @@ export default {
       
         addIngredient(){
             console.log('Test function at Init page')
-            this.ingreObj
+            // this.ingreObj
             this.ingredientArr.push({
               ingreID:this.ingreID++,
               ingredient:''
