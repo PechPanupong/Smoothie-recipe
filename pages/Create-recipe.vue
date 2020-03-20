@@ -2,30 +2,31 @@
 <div class="container">
  <div id="create-recipe" class="create-box">
         <div class="row" id="head-title">
-            <h1>
+            <h1 id="add-head">
                 Add New Smoothie Recipe
             </h1>
         </div>
         <div class="row" id="title-box">
             <div class="col">
-            <div class="row">
-                <label>Add title of smoothie </label>
-            </div>
-            <div class="row">
-            <input id="title-smooth" v-model="title" type="text" placeholder="Add your title Smoothie">
+            <!-- <div class="row">
+                <label class="add-name" >Add title of smoothie </label>
+            </div> -->
+            <div class="row" >
+            <!-- <input id="title-smooth" v-model="title" type="text" placeholder="Add your title Smoothie"> -->
+            <v-text-field class="addval" v-model="title" label="Add Smoothie name"></v-text-field>
             </div>
         </div>
         </div>
 
-        <div class="ingre-box"  v-for="(inItem,index) in ingredientArr" v-bind:key="inItem.id" >
+        <div class="ingre-box"  v-for="(inItem,index) in ingredientArr" v-bind:key="index" >
          <div class="row" id="ingre-box">
              <div class="col">
-              <div class="row">
-                <label>Add Ingredient </label>
-            </div>
+              <!-- <div class="row">
+                <label class="add-ingre">Add Ingredient </label>
+            </div> -->
             <div class="row">
-            <!-- <input id="ingredient" v-model="inItem.ingredient" type="text" placeholder="Add your Ingredient"> -->
-            <input  class="inputval" :id="'input'+index" v-model="inItem.ingredient" type="text" placeholder="Add your Ingredient">
+            <!-- <input  class="inputval" :id="'input'+index" v-model="inItem.ingredient" type="text" placeholder="Add your Ingredient"> -->
+            <v-text-field class="addval" :id="'input'+index" v-model="inItem.ingredient" label="Add Ingredient"></v-text-field>
             </div>
             
             <!-- <button id="delete-btn" @click="deleteIngredient(index)">Delete</button> -->
@@ -48,8 +49,9 @@
             <button id="save" @click="saveRecipe">Save this recipe</button>
             </div>
               <div class="col" id="btn-col">
-             <nuxt-link to="/"><button id="cancel">cancel</button></nuxt-link>
+             <nuxt-link to="/"><button id="cancel">Back to home page</button></nuxt-link>
             </div>
+            
         </div>
 
     </div>
@@ -80,15 +82,13 @@ export default {
 
             NameShow:'',
             IngreShow:'',
-            test:''
+            test:'',
+            tmpIngreArr:[]
         }
     },
     created(){
       console.log('test create()')
-      eventBus.$on('open-create', (testEventbus) => {  
-        this.test = testEventbus 
-            console.log('Receive event.', this.test);
-        });
+  
     },
   
     mounted(){
@@ -104,27 +104,42 @@ export default {
     },
     methods:{
            checkIsEmpty(){
-             console.log(this.ingredientArr.length);
-            for(let index=0;index< this.ingredientArr.length;index++){
-              if(this.ingredientArr[index].ingredient == "" ){
-                console.log("pop out",index)
-                alert("Please input ingredient")
-                this.ingredientArr.splice(index,1)        
+            // for(let index=0;index< this.ingredientArr.length;index++){
+            //   if(this.ingredientArr[index].ingredient == "" ){
+            //     console.log("pop out",index)
+            //     // alert("Please input ingredient")
+            //     this.ingredientArr.splice(index,1)        
+            //   }else{
+            //     console.log("No empty")
+            //   }
+            // }
+             for(let index=0;index<this.ingredientArr.length ;index++){
+            console.log(this.ingredientArr[index].ingredient)
+              if(this.ingredientArr[index].ingredient != "" ){
+                console.log("has empty")
+                this.tmpIngreArr.push(this.ingredientArr[index])
               }else{
                 console.log("No empty")
               }
+            
             }
+            console.log(this.tmpIngreArr)
             
            },
         
           async saveRecipe() {
+            if(this.title == ""){
+           alert("Please input your recipe name")
+            return false
+          }
            this.checkIsEmpty();
           var NameCollec= "Smoothie-Recipe"
           var namedoc = this.title
             const ref = fireDb.collection(NameCollec).doc(namedoc)
             const document = {
             NameSmoothie: this.title,
-            Ingredient: this.ingredientArr,
+            // Ingredient: this.ingredientArr,
+            Ingredient: this.tmpIngreArr,
             }
           try {
             await ref.set(document)
@@ -132,7 +147,7 @@ export default {
             console.error(e)
           }
           alert("Create Success")
-          console.log("Set Title:",this.title," Set Ingredient:",this.ingredientArr)
+          console.log("Set Title:",this.title," Set Ingredient:",this.tmpIngreArr)
         },
       
         addIngredient(){
@@ -155,26 +170,41 @@ export default {
 </script>
 
 <style>
+
 .container {
     display: flex;
     justify-content: center;
 }
-.inputval{
-  width: 100%;
+#add-head{
+  
+}
+.add-name{
+ color: #983c89;
+}
+.add-ingre{
+ color: #983c89;
+}
+
+.addval{
+    width: 100%;
     padding-top: 1em;
     padding-bottom: 1em;
-        height: 2em;
+    height: 2em;
+    color: black !important;
 }
+
 .ingre-box{
   padding-bottom: 1em;
+  margin-top: 0em;
 }
 #head-title{
     height: 5em;
     align-items: center;
     font-size: 2em;
+    color: #ffffff;
 }
 #title-box{
-    height: 5em;
+    height: 8em;
     display: flex;
 
 }
@@ -183,10 +213,12 @@ export default {
     display: flex;
 }
 #delete-btn{
-    background: red;
+    background: #b7adab;
     width: 5em;
     border-radius: 5em;
-    /* margin-top: 1em; */
+    margin-top: 1em;
+    color: black;
+    /* color: rgb(143, 1, 131); */
 }
 #btn-row{
   padding-top: 5em;
@@ -217,5 +249,9 @@ color: rgb(255, 251, 251);
     height:2em
 }
 
+/* .theme--dark.v-input input
+ {
+  color: rgb(143, 1, 131) !important;
+} */
 
 </style>

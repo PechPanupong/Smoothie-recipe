@@ -6,20 +6,20 @@
     </div>
     
     <div id="toCreatRow" class="row" style="justify-content: center;">
-      <nuxt-link to="/Create-recipe"><button id="btnAdd">Add</button></nuxt-link>
+      <nuxt-link to="/Create-recipe"><button id="btnAdd">Add Your Recipe</button></nuxt-link>
     </div>
 
    <div>
     <div class="row card-recipe" >
-      <div class="col-4" v-for="(item,index) in allData" v-bind:key="item">
-         <v-card class="mx-auto" max-width="400">
+      <div class="col-4" style="padding-top:2em" v-for="(item,index) in allData" v-bind:key="index">
+         <v-card class="mx-auto recipe-card" max-width="400">
               <button @click="deleteRecipe('name'+index,index)" class="delete-btn">X</button>
             <div class="name-smoothie">
-            <v-card-title :id="'name'+index">{{item.NameSmoothie}}</v-card-title>
+            <v-card-title  :id="'name'+index">{{item.NameSmoothie}}</v-card-title>
             </div>
             <div class="row">
              <div class="col col-pad" >
-                <span v-for="ingr in item.Ingredient" v-bind:key="ingr">
+                <span v-for="(ingr,index) in item.Ingredient" v-bind:key="index">
               <span class="ingr" >{{ingr.ingredient}}</span>
              </span>
              </div>
@@ -34,27 +34,30 @@
        <div id="create-recipe" class="create-box">
         <div class="row" id="head-title">
             <h1>
-                Add New Smoothie Recipe
+                Edit Smoothie
             </h1>
         </div>
         <div class="row" id="title-box">
             <div class="col">
-            <div class="row">
+            <!-- <div class="row">
                 <label>Add title of smoothie </label>
-            </div>
+            </div> -->
             <div class="row">
-            <input id="title-smooth" v-model="title" type="text" placeholder="Add your title Smoothie">
+            <!-- <input id="title-smooth" v-model="title" type="text" placeholder="Add your title Smoothie"> -->
+            <v-text-field   label="Add Smoothie name" class="inputval" id="title-smooth" v-model="title" ></v-text-field>
+
             </div>
         </div>
         </div>
-        <div class="ingre-box"  v-for="(inItem,index) in ingreArr" v-bind:key="inItem.id" >
+        <div class="ingre-box"  v-for="(inItem,index) in ingreArr" v-bind:key="index" >
          <div class="row" id="ingre-box">
              <div class="col">
-              <div class="row">
+              <!-- <div class="row">
                 <label>Add Ingredient</label>
-            </div>
+            </div> -->
             <div class="row">
-            <input  class="inputval" :id="'input'+index" v-model="inItem.ingredient" type="text" placeholder="Add your Ingredient">
+            <!-- <input  class="inputval" :id="'input'+index" v-model="inItem.ingredient" type="text" placeholder="Add your Ingredient"> -->
+            <v-text-field  label="Add Ingredient" class="inputval" :id="'input'+index" v-model="inItem.ingredient" ></v-text-field>
             </div>
             </div>
         </div>
@@ -102,7 +105,9 @@ import { eventBus } from "@/eventBus";
         ingreID:0,
         ingreArr:[{
           ingredient:''
-        }]
+        }],
+        isEmpty:false,
+        tmpArr:[]
 
       }
     },
@@ -114,30 +119,64 @@ import { eventBus } from "@/eventBus";
             })
         })
         console.log(this.allData)
+       
     
     },
     methods: {
        checkIsEmpty(){
-             console.log(this.ingreArr.length);
-            for(let index=0;index< this.ingreArr.length;index++){
-              if(this.ingreArr[index].ingredient == "" ){
-                console.log("pop out",index)
-                alert("Please input ingredient")
-                this.ingreArr.splice(index,1)        
+         this.j = this.ingreArr.length
+         console.log(this.j)
+        
+        for(let index=0;index<this.ingreArr.length ;index++){
+            console.log(this.ingreArr[index].ingredient)
+              if(this.ingreArr[index].ingredient != "" ){
+                console.log("has empty")
+                this.tmpArr.push(this.ingreArr[index])
               }else{
                 console.log("No empty")
               }
+            
             }
+            console.log(this.tmpArr)
+          // for(let index=0;index<this.ingreArr.length ;index++){
+          //   console.log(this.ingreArr[index].ingredient)
+          //     if(this.ingreArr[index].ingredient = "" ){
+          //       console.log(index)
+          //       console.log("has empty")
+          //       this.ingreArr.splice(index,1)  
+          //       console.log(this.ingreArr.length)  
+          //     }else{
+          //       console.log("No empty")
+          //     }
+            
+          //   }
+          //  console.log(this.ingreArr)
             
            },
+           deleteOldDoc(){
+             var oldnamedoc = localStorage.getItem('name')
+          
+          fireDb.collection('Smoothie-Recipe').doc(oldnamedoc).delete().then(function(){
+                console.log('Delete: '+ oldnamedoc)
+        }).catch(function(error){
+          console.log('Error delete document: ',error)
+        })
+
+           },
       async saveRecipe() {
+         if(this.title == ""){
+           alert("Please input your recipe name")
+            return false
+          }
           this.checkIsEmpty();
+          this.deleteOldDoc();
           var NameCollec= "Smoothie-Recipe"
           var namedoc = this.title
             const ref = fireDb.collection(NameCollec).doc(namedoc)
             const document = {
             NameSmoothie: this.title,
-            Ingredient: this.ingreArr,
+            // Ingredient: this.ingreArr,
+            Ingredient: this.tmpArr,
             }
           try {
             await ref.set(document)
@@ -145,6 +184,8 @@ import { eventBus } from "@/eventBus";
             console.error(e)
           }
           alert("Create Success")
+          console.log(this.title)
+          this.tmpArr = []
           this.modalShow = false
           window.location.reload(true)
 
@@ -155,8 +196,10 @@ import { eventBus } from "@/eventBus";
        this.ingreArr.splice(0,1)
        this.nameSmoothie= document.getElementById(id).textContent
        var name = this.nameSmoothie
+       localStorage.setItem('name',name)
        this.callData(name)
        this.modalShow = true;
+       
         
       },
       async callData(dat){
@@ -176,6 +219,8 @@ import { eventBus } from "@/eventBus";
              ingredient:this.ingreName[this.i].ingredient
            })
          }
+         this.j = this.ingreName.length
+         console.log(this.j)
       },
          addIngre(){
            this.ingreArr.push({
@@ -189,25 +234,26 @@ import { eventBus } from "@/eventBus";
       
         closeModal(){
           this.ingreArr = []
+          this.tmpArr = []
           this.title=''
-          // this.modalShow = false
+          this.modalShow = false
           // window.location.reload(true)
         },
         deleteRecipe(n,index){
            this.nameSmoothie= document.getElementById(n).textContent
            var name = this.nameSmoothie
-          var conf = confirm("Do you want to delete this "+ name + "?");
+           var conf = confirm("Do you want to delete this "+ name + "?");
            if( conf == true ) {
                 this.allData.splice(index,1)
             fireDb.collection('Smoothie-Recipe').doc(name).delete().then(function(){
                 console.log('Delete: '+ name)
-        }).catch(function(error){
-          console.log('Error delete document: ',error)
-        })
-                  return true;
-               } else {
+               }).catch(function(error){
+                 console.log('Error delete document: ',error)
+              })
+                return true;
+           } else {
                   return false;
-               }
+          }
           // this.allData.splice(index,1)
         }
 
@@ -217,6 +263,12 @@ import { eventBus } from "@/eventBus";
 <style>
 .home-page{
   width: -webkit-fill-available;
+}
+.recipe-card{
+  background: #bb6e6e !important;
+-webkit-box-shadow: 12px 14px 25px -2px rgba(0,0,0,0.41);
+-moz-box-shadow: 12px 14px 25px -2px rgba(0,0,0,0.41);
+box-shadow: 12px 14px 25px -2px rgba(0,0,0,0.41);
 }
   .container {
     min-height: 100vh;
@@ -229,12 +281,17 @@ import { eventBus } from "@/eventBus";
   }
   #head{
     font-size: 5em;
+    color: #ffffff;
     font-weight: 700;
   }
   #btnAdd{
         background: burlywood;
-        width: 5em;
-        color: black;
+        width: 18em;
+    color: black;
+    height: 2em;
+    border-radius: 1em;
+    font-size: 1.5em;
+    font-weight: 700;
     }
     .delete-btn{
     width: 2em;
@@ -261,7 +318,7 @@ import { eventBus } from "@/eventBus";
     padding-left: 0.5em;
   }
   .ingr{
-        color:rgb(219, 62, 180);
+        color:white;
     display: inline-block;
     font-size: 1em;
     font-weight: 700;
@@ -270,7 +327,7 @@ import { eventBus } from "@/eventBus";
     margin-bottom: 16px;
     margin-right: 12px;
     padding: 3px 12px;
-    border: 1px solid rgb(219, 62, 180);
+    border: 1px solid white;
     border-radius: 10px;
     white-space: nowrap;
   }
@@ -287,27 +344,33 @@ import { eventBus } from "@/eventBus";
   width: 100%;
     padding-top: 1em;
     padding-bottom: 1em;
-        height: 2em;
+    height: 2em;
+    color: blanchedalmond;
 }
 .ingre-box{
   padding-bottom: 1em;
+  margin-top: 1em;
 }
 #head-title{
     height: 5em;
     align-items: center;
     font-size: 2em;
+    justify-content: center;
+    display: flex;
+    color: #e6cbe2;
 }
 #title-box{
-    height: 5em;
+    height: 8em;
     display: flex;
 
 }
 #ingre-box{
     height: 5em;
     display: flex;
+    margin-top: 1em;
 }
 #delete-btn{
-    background: red;
+    background: #e0b6b0;
     width: 5em;
     border-radius: 5em;
     /* margin-top: 1em; */
@@ -341,6 +404,9 @@ color: rgb(255, 251, 251);
     height:2em
 }
 .create-box{
-  padding: 2em;
+  /* padding: 2em; */
+      padding: 2em 6em;
+      /* background: #e0b6b0; */
 }
+
 </style>

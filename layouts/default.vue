@@ -1,5 +1,11 @@
 <template>
-  <v-app dark>
+
+<v-app style="background:#734f4f" >
+<v-container>
+        <nuxt />
+      </v-container>
+</v-app >
+  <!-- <v-app > -->
     <!-- <v-navigation-drawer
       v-model="drawer"
       :mini-variant="miniVariant"
@@ -58,9 +64,9 @@
       </v-btn>
     </v-app-bar>
     <v-content> -->
-      <v-container>
+      <!-- <v-container>
         <nuxt />
-      </v-container>
+      </v-container> -->
     <!-- </v-content>
     <v-navigation-drawer
       v-model="rightDrawer"
@@ -85,7 +91,7 @@
     >
       <span>&copy; {{ new Date().getFullYear() }}</span>
     </v-footer> -->
-  </v-app>
+  <!-- </v-app> -->
 </template>
 
 <script>
