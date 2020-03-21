@@ -284,9 +284,9 @@ import {
 }
 .recipe-card{
   background: #bb6e6e !important;
--webkit-box-shadow: 12px 14px 25px -2px rgba(0,0,0,0.41);
--moz-box-shadow: 12px 14px 25px -2px rgba(0,0,0,0.41);
-box-shadow: 12px 14px 25px -2px rgba(0,0,0,0.41);
+-webkit-box-shadow: 12px 14px 25px -2px rgba(0,0,0,0.41) !important;
+-moz-box-shadow: 12px 14px 25px -2px rgba(0,0,0,0.41) !important;
+box-shadow: 12px 14px 25px -2px rgba(0,0,0,0.41) !important;
 }
   .container {
     min-height: 100vh;
