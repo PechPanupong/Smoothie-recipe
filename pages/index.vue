@@ -14,7 +14,7 @@
       <div class="col-4" style="padding-top:2em" v-for="(item,index) in allData" v-bind:key="index">
          <v-card class="mx-auto recipe-card" max-width="400">
               <!-- <button @click="deleteRecipe('name'+index,index)" class="delete-btn">X</button> -->
-              <v-btn  @click="deleteRecipe('name'+index,index)" class="delete-btn" depressed><v-icon>{{ icons.mdiDelete }}</v-icon></v-btn >
+              <v-btn  @click="deleteRecipe('name'+index,index)" style="width:3em" class="delete-btn" depressed><v-icon>{{ icons.mdiDelete }}</v-icon></v-btn >
 
             <div class="name-smoothie">
             <v-card-title  :id="'name'+index">{{item.NameSmoothie}}</v-card-title>
@@ -322,23 +322,24 @@ box-shadow: 12px 14px 25px -2px rgba(0,0,0,0.41);
     border-radius: 2em;
     padding-left: 10px !important; */
 
-     width: 3em;
+     min-width: 2em !important;
     height: 3em !important;
     background: #e22b2b !important;
     position: relative;
     margin-top: -1em;
     float: right;
-    margin-right: 2em;
-    border-radius: 2em;
+    margin-right: -1em;
+    border-radius: 2em !important;
     }
     .edit-btn{
     width: 5em;
-    height: 3em !important;
+    height: 5em !important;
     background: #b93260 !important;
     position: relative;
-    margin-top: -1em;
+    margin-top: -2em;
     float: right;
     margin-right: 2em;
+    border-radius: 100%;
     }
   .name-smoothie{
     height: 10em;
