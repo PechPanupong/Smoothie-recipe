@@ -328,7 +328,7 @@ box-shadow: 12px 14px 25px -2px rgba(0,0,0,0.41);
     position: relative;
     margin-top: -1em;
     float: right;
-    margin-right: -1em;
+    margin-right: 1em;
     border-radius: 2em !important;
     }
     .edit-btn{
