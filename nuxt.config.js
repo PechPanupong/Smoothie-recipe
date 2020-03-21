@@ -56,6 +56,10 @@ export default {
            icons: ['fab']
          }
        ]
+      },
+      'nuxt-sweetalert2',
+      {
+        confirmButtonColor: '#FFFFFF'
       }
 ]
   ],

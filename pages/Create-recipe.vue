@@ -33,7 +33,7 @@
             </div>
         </div>
         <div class="row">
-            <button id="delete-btn" @click="deleteIngredient(index)">Delete</button>
+            <button class="delete-ingredient" @click="deleteIngredient(index)">Delete</button>
               
             </div>
         </div>
@@ -43,13 +43,16 @@
 
         <div class="row" id="btn-row">
             <div class="col" id="btn-col">
-            <button @click="addIngredient" id="add-ingr">Add more ingredient</button>
+            <!-- <button @click="addIngredient" id="add-ingr">Add more ingredient</button>        -->
+                 <v-btn @click="addIngredient" id="add-ingr">Add more ingredient</v-btn>
             </div>
               <div class="col" id="btn-col">
-            <button id="save" @click="saveRecipe">Save this recipe</button>
+            <!-- <button id="save" @click="saveRecipe">Save this recipe</button>          -->
+               <v-btn id="save" @click="saveRecipe">Save this recipe</v-btn>
             </div>
               <div class="col" id="btn-col">
-             <nuxt-link to="/"><button id="cancel">Back to home page</button></nuxt-link>
+             <!-- <nuxt-link to="/"><button id="cancel">Back to home page</button></nuxt-link>         -->
+                  <nuxt-link class="noline" to="/"><v-btn id="cancel">Back to home page</v-btn></nuxt-link>
             </div>
             
         </div>
@@ -92,6 +95,7 @@ export default {
     },
   
     mounted(){
+      
         console.log('Init Page');
         fireDb.collection('Smoothie-Recipe').get().then((dat)=>{
             dat.forEach(element => {
@@ -128,6 +132,8 @@ export default {
            },
         
           async saveRecipe() {
+            const curr = window.location.origin
+            console.log(curr)
             if(this.title == ""){
            alert("Please input your recipe name")
             return false
@@ -147,7 +153,14 @@ export default {
             console.error(e)
           }
           alert("Create Success")
+
+          window.location = curr+'/'
           console.log("Set Title:",this.title," Set Ingredient:",this.tmpIngreArr)
+          this.title=""
+          this.tmpIngreArr[0]=""
+          
+        
+    
         },
       
         addIngredient(){
@@ -170,14 +183,14 @@ export default {
 </script>
 
 <style>
-
+.noline{
+  text-decoration-line: none;
+}
 .container {
     display: flex;
     justify-content: center;
 }
-#add-head{
-  
-}
+
 .add-name{
  color: #983c89;
 }
@@ -212,13 +225,21 @@ export default {
     height: 5em;
     display: flex;
 }
+.delete-ingredient{
+  color: #000000;
+    background: #e0b6b0 !important;
+    width: 5em;
+    border-radius: 5em;
+    height: 1.5em !important;
+    /* margin-top: 1em; */
+}
 #delete-btn{
     background: #b7adab;
     width: 5em;
     border-radius: 5em;
     margin-top: 1em;
     color: black;
-    /* color: rgb(143, 1, 131); */
+    
 }
 #btn-row{
   padding-top: 5em;

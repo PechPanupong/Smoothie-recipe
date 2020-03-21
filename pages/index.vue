@@ -6,14 +6,16 @@
     </div>
     
     <div id="toCreatRow" class="row" style="justify-content: center;">
-      <nuxt-link to="/Create-recipe"><button id="btnAdd">Add Your Recipe</button></nuxt-link>
+      <nuxt-link class="noline" to="/Create-recipe"><v-btn id="btnAdd">Add Your Recipe</v-btn></nuxt-link>
     </div>
 
    <div>
     <div class="row card-recipe" >
       <div class="col-4" style="padding-top:2em" v-for="(item,index) in allData" v-bind:key="index">
          <v-card class="mx-auto recipe-card" max-width="400">
-              <button @click="deleteRecipe('name'+index,index)" class="delete-btn">X</button>
+              <!-- <button @click="deleteRecipe('name'+index,index)" class="delete-btn">X</button> -->
+              <v-btn  @click="deleteRecipe('name'+index,index)" class="delete-btn" depressed><v-icon>{{ icons.mdiDelete }}</v-icon></v-btn >
+
             <div class="name-smoothie">
             <v-card-title  :id="'name'+index">{{item.NameSmoothie}}</v-card-title>
             </div>
@@ -24,7 +26,9 @@
              </span>
              </div>
             </div>
-              <button @click="openModal('name'+index)"  class="edit-btn">Edit</button>
+              <!-- <button @click="openModal('name'+index)"  class="edit-btn">Edit</button> -->
+              <v-btn  @click="openModal('name'+index)"  class="edit-btn"><v-icon>{{ icons.mdiPencil }}</v-icon></v-btn >
+              
           </v-card>
       </div>
     </div>
@@ -62,18 +66,22 @@
             </div>
         </div>
         <div class="row">
-            <button @click="deleteIngredient(index)" id="delete-btn" >Delete</button>
+            <!-- <button @click="deleteIngredient(index)" id="delete-btn" >Delete</button> -->
+            <v-btn @click="deleteIngredient(index)" class="delete-ingredient" >Delete</v-btn>
             </div>
         </div>
         <div class="row" id="btn-row">
             <div class="col" id="btn-col">
-            <button @click="addIngre" id="add-ingr">Add more ingredient</button>
+            <!-- <button @click="addIngre" id="add-ingr">Add more ingredient</button>  -->
+            <v-btn @click="addIngre" id="add-ingr">Add more ingredient</v-btn>
             </div>
               <div class="col" id="btn-col">
-            <button @click="saveRecipe" id="save" >Save this recipe</button>
+            <!-- <button @click="saveRecipe" id="save" >Save this recipe</button>                     -->
+            <v-btn @click="saveRecipe" id="save" >Save this recipe</v-btn>
             </div>
               <div class="col" id="btn-col">
-             <button @click="closeModal" id="cancel">cancel</button>
+             <!-- <button @click="closeModal" id="cancel">cancel</button>     -->
+             <v-btn @click="closeModal" id="cancel">cancel</v-btn>
             </div>
         </div>
 
@@ -91,11 +99,18 @@
  <script>
  import {fireDb} from '~/plugins/firebase.js'
 import { eventBus } from "@/eventBus";
+import {
+    mdiPencil,
+    mdiDelete,
+  } from '@mdi/js'
 
   export default {
     data(){
       return{
-        
+        icons: {
+        mdiDelete,
+        mdiPencil
+      },
         i:0,j:0,n:0,
         allData:[],
         title:'',
@@ -261,6 +276,9 @@ import { eventBus } from "@/eventBus";
   }
 </script>
 <style>
+.noline{
+  text-decoration-line: none;
+}
 .home-page{
   width: -webkit-fill-available;
 }
@@ -294,9 +312,19 @@ box-shadow: 12px 14px 25px -2px rgba(0,0,0,0.41);
     font-weight: 700;
     }
     .delete-btn{
-    width: 2em;
-    height: 2em;
-    background: #e22b2b;
+    /* width: 3.5em !important;
+    height: 3em;
+    background: #e22b2b !important;
+    position: relative;
+    margin-top: -1em;
+    float: right;
+    margin-right: 2em;
+    border-radius: 2em;
+    padding-left: 10px !important; */
+
+     width: 3em;
+    height: 3em !important;
+    background: #e22b2b !important;
     position: relative;
     margin-top: -1em;
     float: right;
@@ -304,9 +332,9 @@ box-shadow: 12px 14px 25px -2px rgba(0,0,0,0.41);
     border-radius: 2em;
     }
     .edit-btn{
-    width: 4em;
-    height: 2em;
-    background: #b93260;
+    width: 5em;
+    height: 3em !important;
+    background: #b93260 !important;
     position: relative;
     margin-top: -1em;
     float: right;
@@ -369,10 +397,12 @@ box-shadow: 12px 14px 25px -2px rgba(0,0,0,0.41);
     display: flex;
     margin-top: 1em;
 }
-#delete-btn{
-    background: #e0b6b0;
+.delete-ingredient{
+  color: #000000;
+    background: #e0b6b0 !important;
     width: 5em;
     border-radius: 5em;
+    height: 1.5em !important;
     /* margin-top: 1em; */
 }
 #btn-row{
