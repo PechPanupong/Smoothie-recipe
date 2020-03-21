@@ -339,7 +339,7 @@ box-shadow: 12px 14px 25px -2px rgba(0,0,0,0.41);
     margin-top: -2em;
     float: right;
     margin-right: 2em;
-    border-radius: 100%;
+    border-radius: 100% !important;
     }
   .name-smoothie{
     height: 10em;
